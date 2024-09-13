@@ -574,9 +574,9 @@ export class JSONCompletion {
 				insertTextFormat: InsertTextFormat.Snippet
 			};
 			if (this.doesSupportsLabelDetails()) {
-				completionItem.labelDetails = { description: l10n.t('Default value') };
+				completionItem.labelDetails = { description: schema.detail ?? l10n.t('Default value') };
 			} else {
-				completionItem.detail = l10n.t('Default value');
+				completionItem.detail = schema.detail ?? l10n.t('Default value');
 			}
 			collector.add(completionItem);
 			hasProposals = true;
