@@ -50,7 +50,6 @@ export class JSONCompletion {
 	}
 
 	public doComplete(document: TextDocument, position: Position, doc: Parser.JSONDocument): PromiseLike<CompletionList> {
-
 		const result: CompletionList = {
 			items: [],
 			isIncomplete: false
@@ -245,7 +244,8 @@ export class JSONCompletion {
 							if (propertySchema.suggestSortText !== undefined) {
 								proposal.sortText = propertySchema.suggestSortText;
 							}
-							if (proposal.insertText && endsWith(proposal.insertText, `$1${separatorAfter}`)) {
+							if (propertySchema.propertyCompletion && propertySchema.propertyCompletion.suggestAfterCompletion
+								|| proposal.insertText && endsWith(proposal.insertText, `$1${separatorAfter}`)) {
 								proposal.command = {
 									title: 'Suggest',
 									command: 'editor.action.triggerSuggest'
@@ -548,7 +548,7 @@ export class JSONCompletion {
 	}
 
 	private addSchemaValueCompletions(schema: JSONSchemaRef, separatorAfter: string, collector: CompletionsCollector, types: { [type: string]: boolean }): void {
-		if (typeof schema === 'object') {
+		if (typeof schema === 'object' && !(schema.propertyCompletion && schema.propertyCompletion.openValues)) {
 			this.addEnumValueCompletions(schema, separatorAfter, collector);
 			this.addDefaultValueCompletions(schema, separatorAfter, collector);
 			this.collectTypes(schema, types);
@@ -580,9 +580,9 @@ export class JSONCompletion {
 				insertTextFormat: InsertTextFormat.Snippet
 			};
 			if (this.doesSupportsLabelDetails()) {
-				completionItem.labelDetails = { description: l10n.t('Default value') };
+				completionItem.labelDetails = { description: schema.detail || l10n.t('Default value') };
 			} else {
-				completionItem.detail = l10n.t('Default value');
+				completionItem.detail = schema.detail || l10n.t('Default value');
 			}
 			collector.add(completionItem);
 			hasProposals = true;
@@ -860,12 +860,15 @@ export class JSONCompletion {
 	}
 
 	private getInsertTextForProperty(key: string, propertySchema: JSONSchema | undefined, addValue: boolean, separatorAfter: string): string {
-
 		const propertyText = this.getInsertTextForValue(key, '');
 		if (!addValue) {
 			return propertyText;
 		}
+
 		const resultText = propertyText + ': ';
+		if (propertySchema && propertySchema.propertyCompletion && propertySchema.propertyCompletion.openValues) {
+			return resultText;
+		}
 
 		let value;
 		let nValueProposals = 0;
