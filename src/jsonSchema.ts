@@ -86,6 +86,13 @@ export interface JSONSchema {
 	allowComments?: boolean; // VSCode extension
 	allowTrailingCommas?: boolean; // VSCode extension
 	completionDetail?: string; // VSCode extension
+
+	// Monaco extensions
+
+	propertyCompletion?: {
+		openValues?: boolean;
+		suggestAfterCompletion?: boolean; // Monaco extension
+	}
 }
 
 export interface JSONSchemaMap {

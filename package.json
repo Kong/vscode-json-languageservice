@@ -1,6 +1,6 @@
 {
-  "name": "vscode-json-languageservice",
-  "version": "5.4.4",
+  "name": "@kong/vscode-json-languageservice",
+  "version": "5.4.4-patch.1",
   "description": "Language service for JSON",
   "main": "./lib/umd/jsonLanguageService.js",
   "typings": "./lib/umd/jsonLanguageService",
@@ -8,11 +8,11 @@
   "author": "Microsoft Corporation",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Microsoft/vscode-json-languageservice"
+    "url": "https://github.com/Kong/vscode-json-languageservice"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Microsoft/vscode-json-languageservice"
+    "url": "https://github.com/Kong/vscode-json-languageservice"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
