@@ -74,7 +74,16 @@ export interface JSONSchema {
 
 	// VSCode extensions
 
-	defaultSnippets?: { label?: string; description?: string; markdownDescription?: string; body?: any; bodyText?: string; }[]; // VSCode extension: body: a object that will be converted to a JSON string. bodyText: text with \t and \n
+	defaultSnippets?: {
+		label?: string;
+		description?: string;
+		markdownDescription?: string;
+		// VSCode extension: body: a object that will be converted to a JSON string. bodyText: text with \t and \n
+		body?: any;
+		bodyText?: string;
+		// Monaco extension: filterText: filterText to override in the completion item
+		filterText?: string;
+	}[];
 	errorMessage?: string; // VSCode extension
 	patternErrorMessage?: string; // VSCode extension
 	deprecationMessage?: string; // VSCode extension

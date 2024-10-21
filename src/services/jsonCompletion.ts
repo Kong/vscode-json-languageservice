@@ -50,7 +50,6 @@ export class JSONCompletion {
 	}
 
 	public doComplete(document: TextDocument, position: Position, doc: Parser.JSONDocument): PromiseLike<CompletionList> {
-
 		const result: CompletionList = {
 			items: [],
 			isIncomplete: false
@@ -612,7 +611,7 @@ export class JSONCompletion {
 						type = 'array';
 					}
 					insertText = this.getInsertTextForSnippetValue(value, separatorAfter);
-					filterText = this.getFilterTextForSnippetValue(value);
+					filterText = this.getFilterTextForSnippetValue(s.filterText || value);
 					label = label || this.getLabelForSnippetValue(value);
 				} else if (typeof s.bodyText === 'string') {
 					let prefix = '', suffix = '', indent = '';
@@ -624,7 +623,9 @@ export class JSONCompletion {
 					}
 					insertText = prefix + indent + s.bodyText.split('\n').join('\n' + indent) + suffix + separatorAfter;
 					label = label || insertText,
-						filterText = insertText.replace(/[\n]/g, '');   // remove new lines
+						filterText = s.filterText
+							? this.getFilterTextForSnippetValue(s.filterText) 
+							: insertText.replace(/[\n]/g, '');   // remove new lines
 				} else {
 					return;
 				}
