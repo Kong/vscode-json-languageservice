@@ -1,6 +1,6 @@
 {
   "name": "@kong/vscode-json-languageservice",
-  "version": "5.4.1-patch.1",
+  "version": "5.4.1-patch.2",
   "description": "Language service for JSON",
   "main": "./lib/umd/jsonLanguageService.js",
   "typings": "./lib/umd/jsonLanguageService",
