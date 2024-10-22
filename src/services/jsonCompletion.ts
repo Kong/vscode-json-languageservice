@@ -241,7 +241,7 @@ export class JSONCompletion {
 							if (propertySchema.suggestSortText !== undefined) {
 								proposal.sortText = propertySchema.suggestSortText;
 							}
-							if (proposal.insertText && endsWith(proposal.insertText, `$1${separatorAfter}`)) {
+							if (propertySchema.propertyCompletion?.suggestAfterCompletion || proposal.insertText && endsWith(proposal.insertText, `$1${separatorAfter}`)) {
 								proposal.command = {
 									title: 'Suggest',
 									command: 'editor.action.triggerSuggest'
@@ -541,7 +541,7 @@ export class JSONCompletion {
 	}
 
 	private addSchemaValueCompletions(schema: JSONSchemaRef, separatorAfter: string, collector: CompletionsCollector, types: { [type: string]: boolean }): void {
-		if (typeof schema === 'object') {
+		if (typeof schema === 'object' && !schema.propertyCompletion?.openValues) {
 			this.addEnumValueCompletions(schema, separatorAfter, collector);
 			this.addDefaultValueCompletions(schema, separatorAfter, collector);
 			this.collectTypes(schema, types);
@@ -611,7 +611,7 @@ export class JSONCompletion {
 						type = 'array';
 					}
 					insertText = this.getInsertTextForSnippetValue(value, separatorAfter);
-					filterText = this.getFilterTextForSnippetValue(s.filterText || value);
+					filterText = this.getFilterTextForSnippetValue(value);
 					label = label || this.getLabelForSnippetValue(value);
 				} else if (typeof s.bodyText === 'string') {
 					let prefix = '', suffix = '', indent = '';
@@ -623,9 +623,7 @@ export class JSONCompletion {
 					}
 					insertText = prefix + indent + s.bodyText.split('\n').join('\n' + indent) + suffix + separatorAfter;
 					label = label || insertText,
-						filterText = s.filterText
-							? this.getFilterTextForSnippetValue(s.filterText) 
-							: insertText.replace(/[\n]/g, '');   // remove new lines
+						filterText = insertText.replace(/[\n]/g, '');   // remove new lines
 				} else {
 					return;
 				}
@@ -855,12 +853,15 @@ export class JSONCompletion {
 	}
 
 	private getInsertTextForProperty(key: string, propertySchema: JSONSchema | undefined, addValue: boolean, separatorAfter: string): string {
-
 		const propertyText = this.getInsertTextForValue(key, '');
 		if (!addValue) {
 			return propertyText;
 		}
+
 		const resultText = propertyText + ': ';
+		if (propertySchema?.propertyCompletion?.openValues) {
+			return resultText;
+		}
 
 		let value;
 		let nValueProposals = 0;

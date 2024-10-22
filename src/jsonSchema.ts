@@ -81,8 +81,6 @@ export interface JSONSchema {
 		// VSCode extension: body: a object that will be converted to a JSON string. bodyText: text with \t and \n
 		body?: any;
 		bodyText?: string;
-		// Monaco extension: filterText: filterText to override in the completion item
-		filterText?: string;
 	}[];
 	errorMessage?: string; // VSCode extension
 	patternErrorMessage?: string; // VSCode extension
@@ -98,6 +96,10 @@ export interface JSONSchema {
 	// Monaco extensions
 
 	detail?: string; // Monaco extension
+	propertyCompletion?: {
+		openValues?: boolean;
+		suggestAfterCompletion?: boolean; // Monaco extension
+	}
 }
 
 export interface JSONSchemaMap {
